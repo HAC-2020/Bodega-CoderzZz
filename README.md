@@ -1,2 +1,5 @@
 # Bodega-CoderzZz
-This is the initiated README for team Bodega CoderzZz, Please edit this as you build your project
+
+A simple gRPC Server-Client Connection created to send and receive messages from User.
+
+# Will fine tune README as we go with the Project.

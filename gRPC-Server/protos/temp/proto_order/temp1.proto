@@ -1,0 +1,15 @@
+/*
+from VIT_HACK dir
+python -m grpc_tools.protoc --proto_path=protos -I. --python_out=./src/. --grpc_python_out=./src/. ./protos/temp/proto_order/temp1.proto
+
+\ */
+
+syntax = "proto3";
+
+service MessageTransmission {
+  rpc sendMessage (Message) returns (Message) {}
+}
+
+message Message {
+  string msg = 1;
+}
