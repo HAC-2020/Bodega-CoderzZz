@@ -7,4 +7,6 @@
 - This text is then sent back to the client.
 - The client-server pair has bi-directional stream of data where audio is converted to text in real time and displayed word for word.
 
+**NOTICE:** *this repository does not have the credentials required for Google-Cloud-Speech API*
+
 This file is currently incomplete. We will keep updating it as we go.
