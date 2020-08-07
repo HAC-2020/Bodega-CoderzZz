@@ -1,0 +1,1 @@
+Google Credentials file named "credentials.json" goes in this folder.
