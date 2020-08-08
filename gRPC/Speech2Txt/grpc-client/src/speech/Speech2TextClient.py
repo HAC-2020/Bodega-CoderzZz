@@ -27,7 +27,6 @@ class Speech2TextClient(object):
         :param speechBytesSourceInterface: Takes audio from MicrophoneStream via Interface, which is sent to get Serialized
         :return:
         """
-        print("In streamingRecognize")
         requests = self.streamingRecognizeRequest(speechBytesSourceInterface)
         for response in stub.StreamingRecognize(requests):
             results = response.results

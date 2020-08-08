@@ -2,7 +2,8 @@ import pyaudio
 from six.moves import queue
 from speech.Speech2TextClient import Speech2TextClient
 import grpc
-from speech.proto_speech import audio2text_pb2_grpc
+import sys
+from speech.proto_speech import audio2text_pb2_grpc, orderinfo2user_pb2_grpc, orderinfo2user_pb2
 
 class MicrophoneStream(Speech2TextClient.SpeechBytesSourceInterface):
     """
@@ -96,13 +97,19 @@ class MicrophoneStream(Speech2TextClient.SpeechBytesSourceInterface):
         """
         try:
             with grpc.insecure_channel('localhost:5051') as channel:
-                print("Running  MicrophoneStream...")
-                stub = audio2text_pb2_grpc.Audio2TextStub(channel)
+                print("\nRunning  MicrophoneStream...\n")
+                stub1 = audio2text_pb2_grpc.Audio2TextStub(channel)
                 spx2TxtClient = Speech2TextClient()
                 with MicrophoneStream(16000, 100) as stream:
-                    for transcript in spx2TxtClient.streamingRecognize(stub, stream):
-                        print("Transcript : ", transcript)
-                        # sys.stdout.write(transcript + '\r')
+                    for transcript in spx2TxtClient.streamingRecognize(stub1, stream):
+                        # print("Transcript : ", transcript)
+                        sys.stdout.write(transcript + '\r')
+                    print("\n")
+
+                request = 'dummy request'
+                stub2 = orderinfo2user_pb2_grpc.OrderInfo2UserStub(channel)
+                for response in stub2.SendOrderDetails(orderinfo2user_pb2.Dummy(dummy = request)):
+                    print(response.infoReceived)
 
         except KeyboardInterrupt:
             print("\n\nGrpc Client has stopped.\n")

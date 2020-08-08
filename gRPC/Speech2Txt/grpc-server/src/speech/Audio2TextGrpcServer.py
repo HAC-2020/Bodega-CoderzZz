@@ -1,7 +1,7 @@
 import time
 import grpc
-from speech.proto_speech import audio2text_pb2, audio2text_pb2_grpc
-from speech.Audio2TextGrpcServicer import Audio2TextGrpcServicer
+from speech.proto_speech import audio2text_pb2, audio2text_pb2_grpc, orderinfo2user_pb2, orderinfo2user_pb2_grpc
+from speech.Audio2TextGrpcServicer import Audio2TextGrpcServicer, OrderDetails2User
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -15,7 +15,7 @@ class Audio2TextGrpcServer(object):
         print("\nAudio Grpc Server is about to run...\n")
         server = grpc.server(ThreadPoolExecutor(max_workers=3))
         audio2text_pb2_grpc.add_Audio2TextServicer_to_server(Audio2TextGrpcServicer(), server)
-
+        orderinfo2user_pb2_grpc.add_OrderInfo2UserServicer_to_server(OrderDetails2User(), server)
         server.add_insecure_port('[::]:5051')
         server.start()
         print("\nAudio Grpc Server is now running...\n")

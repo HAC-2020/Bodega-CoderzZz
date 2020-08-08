@@ -2,16 +2,31 @@
 Import required library functions, modules, APIs.
 """
 from __future__ import print_function, division
-from speech.proto_speech import audio2text_pb2, audio2text_pb2_grpc
+from speech.proto_speech import audio2text_pb2, audio2text_pb2_grpc, orderinfo2user_pb2, orderinfo2user_pb2_grpc
 import socket
 from google.cloud import speech
 from google.cloud.speech import enums, types
-import os
+import os, json
 from pathlib import Path
 import logging
+import argparse
+from .test.predict import predict
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(Path.home()) + "/github/grpc/grpc-server/config/gapi_credentials/credentials.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(Path.home()) + "/github/gRPC/Speech2Txt/grpc-server/config/gapi_credentials/credentials.json"
 
+findIntentSlot = []
+prediction = {}
+
+def sendAcknowledgement(sendOrder):
+    restaurant_name = sendOrder[-1]
+    print(restaurant_name + " received : " ,sendOrder)
+    return restaurant_name + " has Received your Order!"
+
+def GetWeather(prediction):
+    return "THIS IS SAMPLE : The Weather in " + prediction['slots']['place_name'] + " is cloudy."    
+
+def Descriptive(prediction):
+    return "NO INTENT FOUND"
 
 class Audio2TextGrpcServicer(audio2text_pb2_grpc.Audio2TextServicer):
 
@@ -42,7 +57,7 @@ class Audio2TextGrpcServicer(audio2text_pb2_grpc.Audio2TextServicer):
         """
         :param transcript: Returns "Serialized" prediction of Google
         """
-        print("Making response")
+        # print("Making response")
         results = []
         result = self.makeStreamingRecognitionResult(transcript)
         results.append(result)
@@ -88,11 +103,11 @@ class Audio2TextGrpcServicer(audio2text_pb2_grpc.Audio2TextServicer):
 
         spxClient = speech.SpeechClient()
 
-        language_code = 'en-US'
+        language_code = 'en-IN'
         sample_rate_hertz = 16000
 
         audioRecogConfig = types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=sample_rate_hertz,
             language_code=language_code)
 
@@ -103,29 +118,61 @@ class Audio2TextGrpcServicer(audio2text_pb2_grpc.Audio2TextServicer):
         responses = spxClient.streaming_recognize(audioStreamingConfig, requests)
 
         for response in responses:
+            global findIntentSlot
             transcript, isEnd = self.makeGoogleResponsesToTranscript(response)
             if isEnd == 1:
                 break
+            findIntentSlot.append(self.makeStreamingRecognizeResponse(transcript))
             yield self.makeStreamingRecognizeResponse(transcript)
+        findString = str(findIntentSlot[-1]).split(": ")
+        findString = findString[-1].split("\n")
+        findIntentSlot = findString[0].split("\"")
+
+        parser = argparse.ArgumentParser()
+
+        parser.add_argument("--input_sent", default=findIntentSlot[1], type=str,
+                            help="Input sentence for prediction")
+        parser.add_argument("--model_dir", default="./albert_fine_tuned", type=str, help="Path to save, load model")
+
+        parser.add_argument("--batch_size", default=32, type=int, help="Batch size for prediction")
+        parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
+
+        intentSlotConfig = parser.parse_args()
+        global prediction 
+        prediction = predict(intentSlotConfig)
+
+class OrderDetails2User(orderinfo2user_pb2_grpc.OrderInfo2UserServicer):
+    def SendOrderDetails(self, request, context):
+        global prediction
+        print("Speech -> Text -> Intent & Slots : ", json.dumps(prediction, sort_keys=False, indent=2))
+
+        if prediction['intent'] == 'OrderFood':
+            lenqty = len(prediction['slots']['qty'])
+            sendOrder = []
+            for i in range(lenqty):
+                if i == 0:
+                    yield orderinfo2user_pb2.OrderDetails(infoReceived = "*************************************ORDER DETAILS*************************************")
+                if prediction['slots']['food_type'][i] == '':
+                    sendString = prediction['slots']['qty'][i] + ' ' + prediction['slots']['food_name'][i]
+                    sendOrder.append(sendString)
+                    yield orderinfo2user_pb2.OrderDetails(infoReceived = sendString)
+                else:
+                    sendString = prediction['slots']['qty'][i] + ' ' + prediction['slots']['food_type'][i] + ' ' + prediction['slots']['food_name'][i]
+                    sendOrder.append(sendString)
+                    yield orderinfo2user_pb2.OrderDetails(infoReceived = sendString)
+                if i == lenqty-1:
+                    sendOrder.append(prediction['slots']['restaurant_name'])
+                    yield orderinfo2user_pb2.OrderDetails(infoReceived = sendAcknowledgement(sendOrder))
+
+        elif prediction['intent'] == 'GetWeather':
+            yield orderinfo2user_pb2.OrderDetails(infoReceived = GetWeather(prediction))
+        
+        elif prediction['intent'] == 'Descriptive':
+            yield orderinfo2user_pb2.OrderDetails(infoReceived = Descriptive(prediction))
 
         print("Got Disconnected with : ", socket.gethostbyname(socket.gethostname()))
 
-
-    def StreamingRecognize_working_old(self, request_iterator, context):
-        """*
-        Client can call this method multiple times to specify audio chunks.
-        OPUS encoding and 100ms chunk is expected.
-        """
-
-        print("Got Connected with : ", socket.gethostbyname(socket.gethostname()))
-        print("Type of request_iterator : ", type(request_iterator))
-        for request in request_iterator:
-            print("Type of request : ", type(request))
-            string = 'asdfghijklmnop' + " 12"
-            recog_result = self.makeStreamingRecognizeResponse(string)
-            yield recog_result
-
-        print("Got Disconnected with : ", socket.gethostbyname(socket.gethostname()))
+        
 
 
 if __name__ == '__main__':
