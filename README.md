@@ -1,4 +1,5 @@
-# Bodega-CoderzZz
+# Mercury
+by Bodega-CoderzZz
 
 # Overview
 - A Chatbot that can take Audio as Input and connect the user to some service
@@ -8,16 +9,39 @@
 
 - For Example : Input -> “I would like to have *1 non veg Pizza* and *2 cokes* from *Dominos*”
 - Output ->
-		OrderDetails: (order details will come here)
-
+```
+{
+	"intent": "OrderFood",
+	"slots": {
+		"food_type": [
+			"non veg",
+			"veg",
+			""
+			],
+	"food_name": [
+			"tacos",
+			"pizza",
+			"cold drinks"
+		],
+	"qty": [
+		"1",
+		"three"
+	],
+	"restaurant_name": "Dominos"
+	}
+}
+```
 
 
 # Speach to Text with gRPC
+
+![alt text](images/gRPCSpeech2Txt.png "alBERT")
 
 - A gRPC-server which takes audio as input from it’s client and sends it to Google-Cloud-Speech API
 - The Cloud-Speech API transcribes this audio to text and sends it back to the server
 - This text is then sent back to the client.
 - The client-server pair has bi-directional stream of data where audio is converted to text in real time and displayed word for word.
+
 
 # Intent Extraction:
 ## ALBERT ‘Fine-Tuned’ Model
@@ -46,14 +70,12 @@
 
 ---
 
-# Added Flutter template for Messaging app UI
-- we planned to use a flutter ui
-- images will come next commit, we also made some charts for alBERT and CRF.
-- the template currently just sits there, looking pretty. we are working on connecting it to our back-end.
+## Partially complete Front End with Flutter
+- we now have a flutter UI
+- the template can now communicate with a simple grpc server and exchange text with it.
+- We are yet to connect our ML back-end to our UI, but there's at least smooth connection between the dart grpc server and the flutter client
 
-![alt text](images/home-screen.jpg "Final Result")
-
-![alt text](images/message-screen.jpg "Final Result")
+![alt text](images/ui-working.png "Working UI connects to Back End")
 
 **NOTICE:** *this repository does not have the credentials required for Google-Cloud-Speech API*
 
