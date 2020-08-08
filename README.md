@@ -21,19 +21,39 @@
 
 # Intent Extraction:
 ## ALBERT ‘Fine-Tuned’ Model
+
 - ALBERT is a pre-trained model with open-source code which has been trained on BookCorpus (800M Words) and English Wikipedia (2500M Words).
 - This pre-trained model has the ability to extract each word’s “contextual meaning” in the text.
 - For Example : Order a book.
 	Book an order.
 - The model can deduce that book in the first sentence is a noun and a subject, and that Book in the second sentence is a verb meaning ‘place an order/make a reservation/appointment’.
 
+![alt text](images/crf-after-albert.png "alBERT")
+
+- Here, The arrows represent alBERT associating words to their meanings in context with the sentance they are in
+- during training alBERT gains experience with associating words with certain tags.
+---
 ## Conditional Random Field (CRF)
-This is a Well-Understood machine learning method for classifying inputs to a feature from  a ‘list of potential’ features.	We are going to use this ON-TOP-OF ALBERT. CRF does Slot-Identification for each word by mapping each word’s possible label with each other and figuring out which mapping has the highest probability. (NOTE : BOLD LINE IS MAX PROBABILITY MAPPING)
+- A machine learning method for associating inputs with one of a list of potential features.
+- We are going to use this ON-TOP-OF ALBERT.
+
+![alt text](images/crf-after-albert.png "CRF")
+
+- CRF does Slot-Identification for each word by mapping the words' possible labels with each other and figuring out which mapping makes the most sense.
+- **note : The bold line represents the most probable sequence**
+
+![alt text](images/after-crf.png "Final Result")
+
+---
 
 # Added Flutter template for Messaging app UI
 - we planned to use a flutter ui
 - images will come next commit, we also made some charts for alBERT and CRF.
 - the template currently just sits there, looking pretty. we are working on connecting it to our back-end.
+
+![alt text](images/home-screen.jpg "Final Result")
+
+![alt text](images/message-screen.jpg "Final Result")
 
 **NOTICE:** *this repository does not have the credentials required for Google-Cloud-Speech API*
 

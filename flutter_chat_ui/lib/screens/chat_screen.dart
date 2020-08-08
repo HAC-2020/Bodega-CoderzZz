@@ -12,7 +12,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  _buildMessage(Message message, bool isMe) {
+  TextEditingController controller =  TextEditingController();
+	_buildMessage(Message message, bool isMe) {
     final Container msg = Container(
       margin: isMe
           ? EdgeInsets.only(
@@ -41,15 +42,14 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            message.time,
-            style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 8.0),
+								Text(
+																message.sender.name,
+																style: TextStyle(
+																								color: Colors.blueGrey,
+																								fontSize: 16.0,
+																								fontWeight: FontWeight.bold,
+																								)),
+                    SizedBox(height: 4.0),
           Text(
             message.text,
             style: TextStyle(
@@ -58,6 +58,16 @@ class _ChatScreenState extends State<ChatScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
+					SizedBox(height: 4.0),
+					Text(
+            message.time,
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+
         ],
       ),
     );
@@ -89,13 +99,16 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: <Widget>[
           IconButton(
-            icon: Icon(Icons.photo),
-            iconSize: 25.0,
+            icon: Icon(Icons.mic),
+            iconSize: 30.0,
             color: Theme.of(context).primaryColor,
-            onPressed: () {},
+						onPressed: () {
+										
+						},
           ),
           Expanded(
             child: TextField(
+							controller: controller,
               textCapitalization: TextCapitalization.sentences,
               onChanged: (value) {},
               decoration: InputDecoration.collapsed(
@@ -108,8 +121,23 @@ class _ChatScreenState extends State<ChatScreen> {
             iconSize: 25.0,
             color: Theme.of(context).primaryColor,
             onPressed: (
-//                IconData sendText = IconData(0xe163)
-                ) {},
+               // IconData sendText = IconData(0xe163)
+						) {
+								if(controller.text != ''){
+									messages.insert(0,
+													Message(
+																	sender: Ritvik,
+																	time: (new DateTime.now().hour).toString() + ':' 
+																	+ (new DateTime.now().minute).toString() ,
+																	text: controller.text,
+																	)
+													);
+									controller.clear();
+									setState((){});
+									//print(messages[0].time + '\n'+ messages[0].text);
+										
+							}
+						},
           ),
         ],
       ),
