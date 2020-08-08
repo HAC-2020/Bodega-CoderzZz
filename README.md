@@ -3,7 +3,7 @@
 # Overview
 - A Chatbot that can take Audio as Input and connect the user to some service
 	* like a telephone operator, but with instant messaging
-	* currently, we only have oredering of food, and our app is not connected to any buisness. 
+	* currently, we only have oredering of food, and our app is not connected to any buisness.
 	* we do however successfully extract the intent of the user, and this information can be formatted as desired
 
 - For Example : Input -> “I would like to have *1 non veg Pizza* and *2 cokes* from *Dominos*”
@@ -29,6 +29,11 @@
 
 ## Conditional Random Field (CRF)
 This is a Well-Understood machine learning method for classifying inputs to a feature from  a ‘list of potential’ features.	We are going to use this ON-TOP-OF ALBERT. CRF does Slot-Identification for each word by mapping each word’s possible label with each other and figuring out which mapping has the highest probability. (NOTE : BOLD LINE IS MAX PROBABILITY MAPPING)
+
+# Added Flutter template for Messaging app UI
+- we planned to use a flutter ui
+- images will come next commit, we also made some charts for alBERT and CRF.
+- the template currently just sits there, looking pretty. we are working on connecting it to our back-end.
 
 **NOTICE:** *this repository does not have the credentials required for Google-Cloud-Speech API*
 
