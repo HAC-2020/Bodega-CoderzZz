@@ -1,6 +1,6 @@
 # Bodega-CoderzZz
 ---
-# Speach to Text with gRPC
+# Speech to Text with gRPC
 
 - A gRPC-server which takes audio as input from it’s client and sends it to Google-Cloud-Speech API
 - The Cloud-Speech API transcribes this audio to text and sends it back to the server
