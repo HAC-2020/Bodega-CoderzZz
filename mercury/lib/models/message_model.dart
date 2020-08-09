@@ -16,9 +16,9 @@ class Message {
 }
 
 // YOU - current user
-final User Ritvik = User(
+final User BodegaCoders = User(
   id: 0,
-  name: 'Ritvik',
+  name: 'BodegaCoders',
   imageUrl: 'assets/images/user.jpg',
 );
 
@@ -36,7 +36,7 @@ List<Message> messages = [
   Message(
     sender: ChatBot,
     time: "4:30 PM",
-    text: 'Hey, Ritvik! What do you wanna have today?',
+    text: 'Hey, BodegaCoders! What do you wanna have today?',
   ),
 ];
 
@@ -45,6 +45,6 @@ List<Message> chats = [
   Message(
     sender: ChatBot,
     time: "4:30 PM",
-    text: 'Hey, Ritvik! What do you wanna have today?',
+    text: 'Hey, BodegaCoders! What do you wanna have today?',
   ),
 ];

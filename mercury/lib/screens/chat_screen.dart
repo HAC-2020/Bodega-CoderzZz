@@ -43,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
-        color: isMe ? Theme.of(context).accentColor : Color(0xFFFFEFEE),
+        color: isMe ? Color(0xff282828) : Color(0xff3c3836),
         borderRadius: isMe
             ? BorderRadius.only(
                 topLeft: Radius.circular(15.0),
@@ -107,7 +107,6 @@ class _ChatScreenState extends State<ChatScreen> {
             speechText = val.recognizedWords;
             controller.clear();
             controller.text = speechText;
-            // print("User Said -> " + speechText);
           }),
         );
       }
@@ -121,19 +120,24 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       height: 70.0,
-      color: Colors.white,
+      color: Colors.black,
       child: Row(
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.mic),
             iconSize: 30.0,
-            color: Theme.of(context).primaryColor,
+            color: Color(0xff689d6a),
             onPressed: _listen,
           ),
           Expanded(
             child: TextField(
-              keyboardType: TextInputType.multiline,
+              style: TextStyle(
+                color: Color(0xff689d6a),
+              ),
               controller: controller,
+              textInputAction: TextInputAction.newline,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
               textCapitalization: TextCapitalization.sentences,
               onChanged: (value) {},
               decoration: InputDecoration.collapsed(
@@ -144,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: Icon(Icons.send),
             iconSize: 25.0,
-            color: Theme.of(context).primaryColor,
+            color: Color(0xff689d6a),
             onPressed: () async {
               var msgFromUser = controller.text;
               var mins;
@@ -158,7 +162,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 messages.insert(
                     0,
                     Message(
-                      sender: Ritvik,
+                      sender: BodegaCoders,
                       time: (new DateTime.now().hour).toString() + ':' + mins,
                       text: msgFromUser,
                     ));
@@ -191,6 +195,7 @@ class _ChatScreenState extends State<ChatScreen> {
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
+            color: Color(0xff689d6a),
           ),
         ),
         elevation: 0.0,
@@ -198,7 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: Icon(Icons.more_horiz),
             iconSize: 30.0,
-            color: Colors.white,
+            color: Color(0xff689d6a),
             onPressed: () {},
           ),
         ],
@@ -210,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xff689d6a),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
@@ -227,7 +232,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: messages.length,
                     itemBuilder: (BuildContext context, int index) {
                       final Message message = messages[index];
-                      final bool isMe = message.sender.id == Ritvik.id;
+                      final bool isMe = message.sender.id == BodegaCoders.id;
                       return _buildMessage(message, isMe);
                     },
                   ),
