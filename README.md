@@ -7,7 +7,7 @@ by Bodega-CoderzZz
 	* currently, we only have oredering of food, and our app is not connected to any buisness.
 	* we do however successfully extract the intent of the user, and this information can be formatted as desired
 
-- For Example : Input -> “I would like to have *1 non veg Pizza* and *2 cokes* from *Dominos*”
+- For Example : Input -> “I would like to have *1 non veg Taco* and *3 veg Pizzas* and *three cool drinks* from *Dominos*”
 - Output ->
 ```
 {
@@ -19,7 +19,7 @@ by Bodega-CoderzZz
 			""
 			],
 	"food_name": [
-			"tacos",
+			"taco",
 			"pizza",
 			"cold drinks"
 		],
@@ -77,6 +77,5 @@ by Bodega-CoderzZz
 
 ![alt text](images/ui-working.png "Working UI connects to Back End")
 
-**NOTICE:** *this repository does not have the credentials required for Google-Cloud-Speech API*
 
 This file is currently incomplete. We will keep updating it as we go.
